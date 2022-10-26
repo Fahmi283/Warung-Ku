@@ -33,9 +33,9 @@ class ItemsProvider extends ChangeNotifier {
       notifyListeners();
       changeState(ViewState.none);
       return result;
-    } catch (e) {
+    } on FirebaseAuthException catch (e) {
       changeState(ViewState.error);
-      return '';
+      return e.toString();
     }
   }
 

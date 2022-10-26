@@ -69,9 +69,9 @@ class ListItems extends StatelessWidget {
                   subtitle: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Rp. ${currency.format(data.items[index].price)}'),
-                      Text(data.items[index].stock.toString()),
-                      Text(data.items[index].id ?? '')
+                      Text(
+                          'Price : Rp. ${currency.format(data.items[index].price)}'),
+                      Text('Stock : ${data.items[index].stock.toString()}'),
                     ],
                   ),
                 ),

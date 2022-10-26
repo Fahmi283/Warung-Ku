@@ -9,6 +9,8 @@ import 'package:warung_ku/screen/entry_data.dart';
 import 'package:warung_ku/screen/login_screen.dart';
 import 'package:warung_ku/widget/entry_sales.dart';
 import 'package:warung_ku/widget/list_item.dart';
+import 'package:warung_ku/widget/settings.dart';
+import 'package:warung_ku/widget/table_items.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -23,8 +25,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> screens = [
     const EntrySales(),
     ListItems(),
-    const Center(child: Text('Profile')),
-    const Center(child: Text('Settings')),
+    TableData(),
+    const Settings(),
   ];
 
   Future<void> initialState() async {
@@ -46,29 +48,32 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'WarungKu',
+          'Smart Store',
           style: GoogleFonts.lato(fontSize: 30, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-              onPressed: () async {
-                if (_bottomNavIndex == 1) {
-                  Navigator.pushNamed(context, EntryItems.routeName);
-                } else {
-                  SmartDialog.showLoading();
-                  await FirebaseAuth.instance.signOut();
-                  SmartDialog.dismiss();
-                  if (mounted) {}
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, LoginScreen.routeName, (route) => false);
-                }
-              },
-              icon: Icon(
-                  (_bottomNavIndex == 1) ? Icons.add : Icons.logout_outlined),
-            ),
+            child: (_bottomNavIndex == 1)
+                ? IconButton(
+                    onPressed: () async {
+                      if (_bottomNavIndex == 1) {
+                        Navigator.pushNamed(context, EntryItems.routeName);
+                      } else {
+                        SmartDialog.showLoading();
+                        await FirebaseAuth.instance.signOut();
+                        SmartDialog.dismiss();
+                        if (mounted) {}
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, LoginScreen.routeName, (route) => false);
+                      }
+                    },
+                    icon: Icon((_bottomNavIndex == 1)
+                        ? Icons.add
+                        : Icons.logout_outlined),
+                  )
+                : Container(),
           ),
         ],
       ),
@@ -76,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
         icons: const [
           Icons.home,
           Icons.storage,
-          Icons.person,
+          Icons.history,
           Icons.settings,
         ],
         activeColor: Colors.blue,

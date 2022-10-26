@@ -164,8 +164,8 @@ class _EntryItemsState extends State<EntryItems> {
                           price: int.parse(priceController.text),
                           barcode: int.parse(barcodeController.text),
                           stock: int.parse(stockController.text));
-                      await helper.add(data);
-                      final result = await helper.edit(data);
+                      var result = await helper.add(data);
+                      helper.get();
                       if (mounted) {}
                       showNotification(context, result);
                       SmartDialog.dismiss();
@@ -178,6 +178,7 @@ class _EntryItemsState extends State<EntryItems> {
                           barcode: int.parse(barcodeController.text),
                           stock: int.parse(stockController.text));
                       final result = await helper.edit(data);
+                      helper.get();
                       if (mounted) {}
                       showNotification(context, result);
                       SmartDialog.dismiss();
