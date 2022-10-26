@@ -1,9 +1,13 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:warung_ku/provider/items_provider.dart';
 import 'package:warung_ku/screen/entry_data.dart';
 import 'package:warung_ku/screen/login_screen.dart';
+import 'package:warung_ku/widget/entry_sales.dart';
 import 'package:warung_ku/widget/list_item.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -17,11 +21,25 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _bottomNavIndex = 0;
   final List<Widget> screens = [
-    const Center(child: Text('Home')),
+    const EntrySales(),
     ListItems(),
     const Center(child: Text('Profile')),
     const Center(child: Text('Settings')),
   ];
+
+  Future<void> initialState() async {
+    var data = Provider.of<ItemsProvider>(context, listen: false);
+    data.get();
+    if (mounted) {}
+  }
+
+  @override
+  void didChangeDependencies() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      initialState();
+    });
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,8 +58,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 if (_bottomNavIndex == 1) {
                   Navigator.pushNamed(context, EntryItems.routeName);
                 } else {
+                  SmartDialog.showLoading();
                   await FirebaseAuth.instance.signOut();
-                  // ignore: use_build_context_synchronously
+                  SmartDialog.dismiss();
+                  if (mounted) {}
                   Navigator.pushNamedAndRemoveUntil(
                       context, LoginScreen.routeName, (route) => false);
                 }

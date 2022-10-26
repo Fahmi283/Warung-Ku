@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 import 'package:warung_ku/screen/home_screen.dart';
@@ -177,6 +178,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: 150,
                       child: ElevatedButton(
                           onPressed: () async {
+                            SmartDialog.showLoading();
                             try {
                               await FirebaseAuth.instance
                                   .signInWithEmailAndPassword(
@@ -185,8 +187,10 @@ class _LoginScreenState extends State<LoginScreen> {
                               // ignore: use_build_context_synchronously
                               Navigator.of(context).pushNamedAndRemoveUntil(
                                   HomeScreen.routeName, (route) => false);
+                              SmartDialog.dismiss();
                             } on FirebaseAuthException catch (e) {
                               showNotification(context, e.message.toString());
+                              SmartDialog.dismiss();
                             }
                           },
                           // CODE HERE: Change button text based on current user
@@ -196,12 +200,15 @@ class _LoginScreenState extends State<LoginScreen> {
               //* RESET PASSWORD BUTTON
               TextButton(
                 onPressed: () async {
+                  SmartDialog.showLoading();
                   try {
                     await FirebaseAuth.instance
                         .sendPasswordResetEmail(email: emailController.text);
-                    // ignore: use_build_context_synchronously
+                    SmartDialog.dismiss();
+                    if (mounted) {}
                     showNotification(context, 'Silahkan Cek Email Anda');
                   } on FirebaseAuthException catch (e) {
+                    SmartDialog.dismiss();
                     showNotification(context, e.message.toString());
                   }
                 },

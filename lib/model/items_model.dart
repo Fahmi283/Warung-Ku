@@ -1,22 +1,15 @@
 class Items {
+  String? id;
   String name;
   int price;
-  String barcode;
+  int barcode;
   int stock;
 
   Items({
+    this.id,
     required this.name,
     required this.price,
     required this.barcode,
     required this.stock,
   });
-
-  Map<String, dynamic> toJson() {
-    return {
-      'name': name,
-      'barcode': barcode,
-      'price': price,
-      'stock': stock,
-    };
-  }
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:warung_ku/model/items_model.dart';
 import 'package:warung_ku/services/items_services.dart';
@@ -9,30 +10,32 @@ enum ViewState {
 }
 
 class ItemsProvider extends ChangeNotifier {
-  String _response = "";
   List<Items> _items = [];
   ViewState _state = ViewState.none;
   final ItemsServices _service = ItemsServices();
 
   List<Items> get items => _items;
-  String get response => _response;
   ViewState get state => _state;
-
+  // ItemsProvider() {
+  //   get();
+  // }
   changeState(ViewState newState) {
     _state = newState;
     notifyListeners();
   }
 
-  void add(Items data) async {
+  Future<String> add(Items data) async {
     changeState(ViewState.loading);
 
     try {
       final result = await _service.add(data);
-      _response = result;
+
       notifyListeners();
       changeState(ViewState.none);
+      return result;
     } catch (e) {
       changeState(ViewState.error);
+      return '';
     }
   }
 
@@ -46,6 +49,36 @@ class ItemsProvider extends ChangeNotifier {
       changeState(ViewState.none);
     } catch (e) {
       changeState(ViewState.error);
+    }
+  }
+
+  Future<String> edit(Items data) async {
+    changeState(ViewState.loading);
+
+    try {
+      final result = await _service.updateItem(data);
+
+      notifyListeners();
+      changeState(ViewState.none);
+      return result;
+    } on FirebaseAuthException catch (e) {
+      changeState(ViewState.error);
+      return e.toString();
+    }
+  }
+
+  Future<String> delete(String id) async {
+    changeState(ViewState.loading);
+
+    try {
+      final result = await _service.delete(id);
+
+      notifyListeners();
+      changeState(ViewState.none);
+      return result;
+    } on FirebaseAuthException catch (e) {
+      changeState(ViewState.error);
+      return e.toString();
     }
   }
 }

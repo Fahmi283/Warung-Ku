@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:warung_ku/provider/items_provider.dart';
 import 'package:warung_ku/screen/entry_data.dart';
@@ -26,6 +27,8 @@ class MyApp extends StatelessWidget {
       stream: FirebaseAuth.instance.userChanges(),
       builder: (context, snapshot) {
         return MaterialApp(
+          navigatorObservers: [FlutterSmartDialog.observer],
+          builder: FlutterSmartDialog.init(),
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primaryColorDark: Colors.blue,

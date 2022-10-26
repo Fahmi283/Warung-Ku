@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:warung_ku/model/items_model.dart';
+import 'package:warung_ku/model/sales_model.dart';
 
 class ItemsServices {
-  CollectionReference item = FirebaseFirestore.instance.collection('items');
+  CollectionReference item = FirebaseFirestore.instance.collection('sales');
 
   // static Future<Items> get() async {
   //   try {
@@ -16,7 +16,7 @@ class ItemsServices {
   //     return null;
   //   }
   // }
-  Future<List<Items>> get() async {
+  Future<List<Sales>> get() async {
     // final itemRef = FirebaseFirestore.instance
     //     .collection('items')
     //     .withConverter<Items>(
@@ -35,30 +35,32 @@ class ItemsServices {
     //       )));
     // });
     // return [];
-    List<Items> data = [];
+    List<Sales> data = [];
     await FirebaseFirestore.instance
         .collection('items')
         .get()
         .then((QuerySnapshot querySnapshot) {
       for (var doc in querySnapshot.docs) {
-        data.add(Items(
+        data.add(Sales(
           id: doc.id,
           name: doc["name"],
-          price: doc["price"],
+          sellingPrice: doc["sellingprice"],
           barcode: doc["barcode"],
-          stock: doc["stock"],
+          sum: doc["stock"],
+          date: doc["date"].toString(),
         ));
       }
     });
     return data;
   }
 
-  Future<String> add(Items data) async {
+  Future<String> add(Sales data) async {
     Map<String, dynamic> map = {
       "name": data.name,
-      "price": data.price,
+      "sellingprice": data.sellingPrice,
       "barcode": data.barcode,
-      "stock": data.stock,
+      "sum": data.sum,
+      "date": FieldValue.serverTimestamp(),
     };
     try {
       await item.add(map);
@@ -66,32 +68,5 @@ class ItemsServices {
     } on FirebaseException catch (e) {
       return e.toString();
     }
-  }
-
-  Future<String> updateItem(Items data) async {
-    var dataReturn = '';
-    Map<String, dynamic> map = {
-      "name": data.name,
-      "price": data.price,
-      "barcode": data.barcode,
-      "stock": data.stock,
-    };
-    await item.doc(data.id).update(map).then((value) {
-      dataReturn = 'Berhasil Diupdate';
-    }).catchError((error) {
-      dataReturn = "Failed to update data: $error";
-    });
-
-    return dataReturn;
-  }
-
-  Future<String> delete(String id) async {
-    var dataReturn = '';
-    await item.doc(id).delete().then((value) {
-      dataReturn = 'User Deleted';
-    }).catchError((error) {
-      dataReturn = "Failed to delete user: $error";
-    });
-    return dataReturn;
   }
 }

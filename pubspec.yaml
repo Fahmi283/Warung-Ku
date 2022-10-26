@@ -46,6 +46,7 @@ dependencies:
   animated_bottom_navigation_bar: ^1.1.0
   cloud_firestore: ^4.0.2
   intl: ^0.17.0
+  flutter_smart_dialog: ^4.6.1+5
 
 dev_dependencies:
   flutter_test:
