@@ -4,6 +4,7 @@ import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:warung_ku/provider/selling_provider.dart';
+import 'package:warung_ku/provider/theme_provider.dart';
 
 class TableData extends StatelessWidget {
   TableData({super.key});
@@ -39,21 +40,28 @@ class TableData extends StatelessWidget {
         }
         if (value.items.isNotEmpty) {
           SmartDialog.dismiss();
-          return HorizontalDataTable(
-            leftHandSideColumnWidth: 50,
-            rightHandSideColumnWidth: 900,
-            isFixedHeader: true,
-            headerWidgets: _getTitleWidget(),
-            leftSideItemBuilder: _generateFirstColumnRow,
-            rightSideItemBuilder: _generateRightHandSideColumnRow,
-            itemCount: value.items.length,
-            rowSeparatorWidget: const Divider(
-              color: Colors.black54,
-              height: 1.0,
-              thickness: 0.0,
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: HorizontalDataTable(
+              leftHandSideColumnWidth: 50,
+              rightHandSideColumnWidth: 900,
+              isFixedHeader: true,
+              headerWidgets: _getTitleWidget(context),
+              leftSideItemBuilder: _generateFirstColumnRow,
+              rightSideItemBuilder: _generateRightHandSideColumnRow,
+              itemCount: value.items.length,
+              rowSeparatorWidget: Divider(
+                color: (context.watch<ThemeProvider>().isdark)
+                    ? Colors.black54
+                    : Colors.white,
+                height: 1.0,
+                thickness: 0.0,
+              ),
+              leftHandSideColBackgroundColor:
+                  const Color.fromARGB(0, 255, 255, 255),
+              rightHandSideColBackgroundColor:
+                  const Color.fromARGB(0, 255, 255, 255),
             ),
-            leftHandSideColBackgroundColor: const Color(0xFFFFFFFF),
-            rightHandSideColBackgroundColor: const Color(0xFFFFFFFF),
           );
         } else {
           return Center(
@@ -69,18 +77,21 @@ class TableData extends StatelessWidget {
     );
   }
 
-  List<Widget> _getTitleWidget() {
+  List<Widget> _getTitleWidget(BuildContext context) {
     return [
-      _getTitleItemWidget('No', 50),
-      _getTitleItemWidget('Items Name', 300),
-      _getTitleItemWidget('Harga Jual', 200),
-      _getTitleItemWidget('Jumlah', 100),
-      _getTitleItemWidget('Tanggal', 300),
+      _getTitleItemWidget('No', 50, context),
+      _getTitleItemWidget('Items Name', 300, context),
+      _getTitleItemWidget('Harga Jual', 200, context),
+      _getTitleItemWidget('Jumlah', 100, context),
+      _getTitleItemWidget('Tanggal', 300, context),
     ];
   }
 
-  Widget _getTitleItemWidget(String label, double width) {
+  Widget _getTitleItemWidget(String label, double width, BuildContext context) {
     return Container(
+      color: (context.watch<ThemeProvider>().isdark)
+          ? Colors.blue[200]
+          : Colors.grey[700],
       width: width,
       height: 56,
       padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),

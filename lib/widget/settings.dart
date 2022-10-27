@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
+import 'package:warung_ku/provider/theme_provider.dart';
 
 import '../screen/login_screen.dart';
 
@@ -40,6 +42,9 @@ class _SettingsState extends State<Settings> {
                 onToggle: (index) {
                   setState(() {
                     active = index!;
+                    final data =
+                        Provider.of<ThemeProvider>(context, listen: false);
+                    data.changeTheme();
                   });
                 },
               ),

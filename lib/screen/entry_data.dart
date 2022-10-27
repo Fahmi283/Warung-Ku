@@ -114,10 +114,9 @@ class _EntryItemsState extends State<EntryItems> {
                     if (value == null || value.isEmpty) {
                       return 'Field tidak boleh kosong';
                     }
-                    return '';
+                    return null;
                   },
                   decoration: InputDecoration(
-                      fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
@@ -139,10 +138,9 @@ class _EntryItemsState extends State<EntryItems> {
                     if (value == null || value.isEmpty) {
                       return 'Field tidak boleh kosong';
                     }
-                    return '';
+                    return null;
                   },
                   decoration: InputDecoration(
-                      fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
@@ -167,10 +165,9 @@ class _EntryItemsState extends State<EntryItems> {
                     if (value == null || value.isEmpty) {
                       return 'Field tidak boleh kosong';
                     }
-                    return '';
+                    return null;
                   },
                   decoration: InputDecoration(
-                      fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
@@ -192,10 +189,9 @@ class _EntryItemsState extends State<EntryItems> {
                     if (value == null || value.isEmpty) {
                       return 'Field tidak boleh kosong';
                     }
-                    return '';
+                    return null;
                   },
                   decoration: InputDecoration(
-                      fillColor: Colors.white,
                       filled: true,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),

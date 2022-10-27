@@ -97,9 +97,9 @@ class _EntrySalesState extends State<EntrySales> {
           );
         } else {
           return SingleChildScrollView(
-            child: Center(
-              child: Form(
-                key: formKey,
+            child: Form(
+              key: formKey,
+              child: Center(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -134,7 +134,6 @@ class _EntrySalesState extends State<EntrySales> {
                           return null;
                         },
                         decoration: InputDecoration(
-                            fillColor: Colors.white,
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
@@ -156,10 +155,9 @@ class _EntrySalesState extends State<EntrySales> {
                           if (value == null || value.isEmpty) {
                             return 'Field tidak boleh kosong';
                           }
-                          return '';
+                          return null;
                         },
                         decoration: InputDecoration(
-                            fillColor: Colors.white,
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
@@ -181,10 +179,9 @@ class _EntrySalesState extends State<EntrySales> {
                           if (value == null || value.isEmpty) {
                             return 'Field tidak boleh kosong';
                           }
-                          return '';
+                          return null;
                         },
                         decoration: InputDecoration(
-                            fillColor: Colors.white,
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
@@ -197,36 +194,37 @@ class _EntrySalesState extends State<EntrySales> {
                       height: 30,
                     ),
                     ElevatedButton(
-                        onPressed: () async {
-                          if (formKey.currentState!.validate()) {
-                            SmartDialog.showLoading();
-                            final sell = Provider.of<SellingProvider>(context,
-                                listen: false);
-                            final item = Provider.of<ItemsProvider>(context,
-                                listen: false);
-                            var indexItem = item.items.indexWhere((element) =>
-                                element.barcode ==
-                                int.parse(barcodeController.text));
-                            Items dataItem = item.items[indexItem];
-                            Sales data = Sales(
-                                name: dataItem.name,
-                                sellingPrice: int.parse(priceController.text),
-                                barcode: int.parse(barcodeController.text),
-                                sum: int.parse(sumController.text),
-                                date: DateFormat('yyyy-MM-dd – kk:mm')
-                                    .format(DateTime.now())
-                                    .toString());
-                            var result = await sell.add(data);
-                            sell.get();
-                            if (mounted) {}
-                            showNotification(context, result);
-                            barcodeController.clear();
-                            sumController.clear();
-                            priceController.clear();
-                            SmartDialog.dismiss();
-                          }
-                        },
-                        child: const Text('Add'))
+                      onPressed: () async {
+                        if (formKey.currentState!.validate()) {
+                          SmartDialog.showLoading();
+                          final sell = Provider.of<SellingProvider>(context,
+                              listen: false);
+                          final item = Provider.of<ItemsProvider>(context,
+                              listen: false);
+                          var indexItem = item.items.indexWhere((element) =>
+                              element.barcode ==
+                              int.parse(barcodeController.text));
+                          Items dataItem = item.items[indexItem];
+                          Sales data = Sales(
+                              name: dataItem.name,
+                              sellingPrice: int.parse(priceController.text),
+                              barcode: int.parse(barcodeController.text),
+                              sum: int.parse(sumController.text),
+                              date: DateFormat('yyyy-MM-dd – kk:mm')
+                                  .format(DateTime.now())
+                                  .toString());
+                          var result = await sell.add(data);
+                          sell.get();
+                          if (mounted) {}
+                          showNotification(context, result);
+                          barcodeController.clear();
+                          sumController.clear();
+                          priceController.clear();
+                          SmartDialog.dismiss();
+                        }
+                      },
+                      child: const Text('Add'),
+                    )
                   ],
                 ),
               ),

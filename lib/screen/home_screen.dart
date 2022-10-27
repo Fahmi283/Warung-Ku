@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:warung_ku/provider/items_provider.dart';
 import 'package:warung_ku/provider/selling_provider.dart';
+import 'package:warung_ku/provider/theme_provider.dart';
 import 'package:warung_ku/screen/entry_data.dart';
 import 'package:warung_ku/screen/login_screen.dart';
 import 'package:warung_ku/widget/entry_sales.dart';
@@ -48,57 +49,60 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Smart Store',
-          style: GoogleFonts.lato(fontSize: 30, fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: (_bottomNavIndex == 1)
-                ? IconButton(
-                    onPressed: () async {
-                      if (_bottomNavIndex == 1) {
-                        Navigator.pushNamed(context, EntryItems.routeName);
-                      } else {
-                        SmartDialog.showLoading();
-                        await FirebaseAuth.instance.signOut();
-                        SmartDialog.dismiss();
-                        if (mounted) {}
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, LoginScreen.routeName, (route) => false);
-                      }
-                    },
-                    icon: Icon((_bottomNavIndex == 1)
-                        ? Icons.add
-                        : Icons.logout_outlined),
-                  )
-                : Container(),
+    return Consumer<ThemeProvider>(builder: (context, value, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Smart Store',
+            style: GoogleFonts.lato(fontSize: 30, fontWeight: FontWeight.bold),
           ),
-        ],
-      ),
-      bottomNavigationBar: AnimatedBottomNavigationBar(
-        icons: const [
-          Icons.home,
-          Icons.storage,
-          Icons.history,
-          Icons.settings,
-        ],
-        activeColor: Colors.blue,
-        gapLocation: GapLocation.none,
-        activeIndex: _bottomNavIndex,
-        leftCornerRadius: 32,
-        rightCornerRadius: 32,
-        onTap: (index) => setState(() => _bottomNavIndex = index),
-        //other params
-      ),
-      body: IndexedStack(
-        index: _bottomNavIndex,
-        children: screens,
-      ),
-    );
+          centerTitle: true,
+          actions: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: (_bottomNavIndex == 1)
+                  ? IconButton(
+                      onPressed: () async {
+                        if (_bottomNavIndex == 1) {
+                          Navigator.pushNamed(context, EntryItems.routeName);
+                        } else {
+                          SmartDialog.showLoading();
+                          await FirebaseAuth.instance.signOut();
+                          SmartDialog.dismiss();
+                          if (mounted) {}
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, LoginScreen.routeName, (route) => false);
+                        }
+                      },
+                      icon: Icon((_bottomNavIndex == 1)
+                          ? Icons.add
+                          : Icons.logout_outlined),
+                    )
+                  : Container(),
+            ),
+          ],
+        ),
+        bottomNavigationBar: AnimatedBottomNavigationBar(
+          icons: const [
+            Icons.home,
+            Icons.storage,
+            Icons.history,
+            Icons.settings,
+          ],
+          backgroundColor: value.isdark ? Colors.white : Colors.grey[700],
+          activeColor: Colors.blue,
+          gapLocation: GapLocation.none,
+          activeIndex: _bottomNavIndex,
+          leftCornerRadius: 32,
+          rightCornerRadius: 32,
+          onTap: (index) => setState(() => _bottomNavIndex = index),
+          //other params
+        ),
+        body: IndexedStack(
+          index: _bottomNavIndex,
+          children: screens,
+        ),
+      );
+    });
   }
 }

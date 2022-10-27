@@ -88,7 +88,6 @@ class _LoginScreenState extends State<LoginScreen> {
                           controller: nameController,
                           cursorColor: Colors.blue,
                           decoration: InputDecoration(
-                              fillColor: Colors.white,
                               filled: true,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
@@ -113,7 +112,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: emailController,
                     cursorColor: Colors.blue,
                     decoration: InputDecoration(
-                        fillColor: Colors.white,
                         filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
@@ -135,7 +133,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: passwordController,
                     cursorColor: Colors.blue,
                     decoration: InputDecoration(
-                        fillColor: Colors.white,
                         filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),

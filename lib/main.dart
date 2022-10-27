@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:warung_ku/provider/items_provider.dart';
 import 'package:warung_ku/provider/selling_provider.dart';
+import 'package:warung_ku/provider/theme_provider.dart';
 import 'package:warung_ku/screen/entry_data.dart';
 import 'package:warung_ku/screen/home_screen.dart';
 import 'package:warung_ku/screen/login_screen.dart';
@@ -16,7 +16,8 @@ void main() async {
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => ItemsProvider()),
-      ChangeNotifierProvider(create: (_) => SellingProvider())
+      ChangeNotifierProvider(create: (_) => SellingProvider()),
+      ChangeNotifierProvider(create: (_) => ThemeProvider())
     ],
     child: const MyApp(),
   ));
@@ -27,16 +28,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<User?>(
-      stream: FirebaseAuth.instance.userChanges(),
-      builder: (context, snapshot) {
+    return Consumer<ThemeProvider>(
+      builder: (context, value, child) {
         return MaterialApp(
           navigatorObservers: [FlutterSmartDialog.observer],
           builder: FlutterSmartDialog.init(),
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             primaryColorDark: Colors.blue,
-            brightness: Brightness.light,
+            brightness: value.isdark ? Brightness.light : Brightness.dark,
             useMaterial3: true,
             primarySwatch: Colors.blue,
           ),
