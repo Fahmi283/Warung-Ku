@@ -30,7 +30,9 @@ class ListItems extends StatelessWidget {
               children: [
                 const Text('Gagal memuat data'),
                 ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    data.get();
+                  },
                   icon: const Icon(Icons.refresh),
                   label: const Text('Refresh'),
                 )

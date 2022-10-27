@@ -48,6 +48,7 @@ dependencies:
   intl: ^0.17.0
   flutter_smart_dialog: ^4.6.1+5
   horizontal_data_table: ^4.1.2+2
+  dio: ^4.0.6
 
 dev_dependencies:
   flutter_test:

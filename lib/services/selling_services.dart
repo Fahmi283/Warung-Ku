@@ -1,25 +1,26 @@
 import 'package:dio/dio.dart';
-import 'package:warung_ku/model/items_model.dart';
+import 'package:warung_ku/model/sales_model.dart';
 
-class ItemsServices {
+class SellingServices {
   late Dio _dio;
   static const baseUrl =
-      'https://warung-firebase-default-rtdb.asia-southeast1.firebasedatabase.app/items.json';
+      'https://warung-firebase-default-rtdb.asia-southeast1.firebasedatabase.app/sellingData.json';
 
-  ItemsServices() {
+  SellingServices() {
     _dio = Dio();
   }
-  Future<List<Items>> getdata() async {
-    List<Items> data = [];
+  Future<List<Sales>> getdata() async {
+    List<Sales> data = [];
     final Response response = await _dio.get(baseUrl);
     if (response.data != null) {
-      response.data.forEach((k, v) {
-        data.add(Items(
-          id: k,
-          name: v["name"],
-          price: v["price"],
-          barcode: v["barcode"],
-          stock: v["stock"],
+      response.data.forEach((id, data) {
+        data.add(Sales(
+          id: id,
+          name: data['name'],
+          sellingPrice: data['sellingPrice'],
+          barcode: data['barcode'],
+          sum: data['sum'],
+          date: data['date'],
         ));
       });
       return data;
@@ -33,12 +34,13 @@ class ItemsServices {
     return [];
   }
 
-  Future<String> add(Items data) async {
+  Future<String> add(Sales data) async {
     Map<String, dynamic> map = {
       "name": data.name,
-      "price": data.price,
+      "sellingPrice": data.sellingPrice,
       "barcode": data.barcode,
-      "stock": data.stock,
+      "sum": data.sum,
+      "date": data.date
     };
     final response = await _dio.post(baseUrl, data: map);
     if (response.data != null) {
@@ -50,19 +52,20 @@ class ItemsServices {
 
   Future<String> delete(String id) async {
     final response = await _dio.delete(
-        'https://warung-firebase-default-rtdb.asia-southeast1.firebasedatabase.app/items/$id.json');
+        'https://warung-firebase-default-rtdb.asia-southeast1.firebasedatabase.app/sellingData/$id.json');
     return response.data.toString();
   }
 
-  Future<String> updateItem(Items data) async {
+  Future<String> updateItem(Sales data) async {
     Map<String, dynamic> map = {
       "name": data.name,
-      "price": data.price,
+      "sellingPrice": data.sellingPrice,
       "barcode": data.barcode,
-      "stock": data.stock,
+      "stock": data.sum,
+      "date": data.date,
     };
     final response = await _dio.put(
-        'https://warung-firebase-default-rtdb.asia-southeast1.firebasedatabase.app/items/${data.id}.json',
+        'https://warung-firebase-default-rtdb.asia-southeast1.firebasedatabase.app/sellingData/${data.id}.json',
         data: map);
 
     if (response.data != null) {

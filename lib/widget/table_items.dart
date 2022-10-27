@@ -3,9 +3,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-import '../provider/items_provider.dart';
-import '../screen/entry_data.dart';
+import 'package:warung_ku/provider/selling_provider.dart';
 
 class TableData extends StatelessWidget {
   TableData({super.key});
@@ -17,13 +15,12 @@ class TableData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var data = Provider.of<ItemsProvider>(context);
-    return Consumer<ItemsProvider>(
+    return Consumer<SellingProvider>(
       builder: (context, value, child) {
-        if (value.state == ViewState.loading) {
+        if (value.state == DataState.loading) {
           SmartDialog.showLoading();
         }
-        if (value.state == ViewState.error) {
+        if (value.state == DataState.error) {
           SmartDialog.dismiss();
           return Center(
             child: Column(
@@ -40,16 +37,16 @@ class TableData extends StatelessWidget {
             ),
           );
         }
-        if (data.items.isNotEmpty) {
+        if (value.items.isNotEmpty) {
           SmartDialog.dismiss();
           return HorizontalDataTable(
             leftHandSideColumnWidth: 50,
-            rightHandSideColumnWidth: 800,
+            rightHandSideColumnWidth: 900,
             isFixedHeader: true,
             headerWidgets: _getTitleWidget(),
             leftSideItemBuilder: _generateFirstColumnRow,
             rightSideItemBuilder: _generateRightHandSideColumnRow,
-            itemCount: data.items.length,
+            itemCount: value.items.length,
             rowSeparatorWidget: const Divider(
               color: Colors.black54,
               height: 1.0,
@@ -62,7 +59,7 @@ class TableData extends StatelessWidget {
           return Center(
             child: TextButton(
               onPressed: () {
-                data.get();
+                value.get();
               },
               child: const Text('List is Empty'),
             ),
@@ -76,9 +73,9 @@ class TableData extends StatelessWidget {
     return [
       _getTitleItemWidget('No', 50),
       _getTitleItemWidget('Items Name', 300),
-      _getTitleItemWidget('price', 200),
-      _getTitleItemWidget('barcode', 200),
-      _getTitleItemWidget('stock', 100),
+      _getTitleItemWidget('Harga Jual', 200),
+      _getTitleItemWidget('Jumlah', 200),
+      _getTitleItemWidget('Tanggal', 200),
     ];
   }
 
@@ -103,15 +100,9 @@ class TableData extends StatelessWidget {
   }
 
   Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
-    var data = Provider.of<ItemsProvider>(context);
+    var data = Provider.of<SellingProvider>(context);
     return InkWell(
-      onTap: () {
-        Navigator.pushNamed(
-          context,
-          EntryItems.routeName,
-          arguments: data.items[index],
-        );
-      },
+      onTap: () {},
       onLongPress: () async {
         final result = await data.delete(data.items[index].id!);
         data.get();
@@ -133,21 +124,22 @@ class TableData extends StatelessWidget {
             height: 52,
             padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
             alignment: Alignment.centerLeft,
-            child: Text('Rp. ${currency.format(data.items[index].price)}'),
+            child:
+                Text('Rp. ${currency.format(data.items[index].sellingPrice)}'),
           ),
           Container(
             width: 200,
             height: 52,
             padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
             alignment: Alignment.centerLeft,
-            child: Text(data.items[index].barcode.toString()),
+            child: Text(data.items[index].sum.toString()),
           ),
           Container(
             width: 100,
             height: 52,
             padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
             alignment: Alignment.centerLeft,
-            child: Text(data.items[index].stock.toString()),
+            child: Text(data.items[index].date),
           ),
         ],
       ),

@@ -1,83 +1,83 @@
 import 'package:flutter/material.dart';
-import 'package:warung_ku/model/items_model.dart';
-import 'package:warung_ku/services/items_services.dart';
+import 'package:warung_ku/model/sales_model.dart';
+import 'package:warung_ku/services/selling_services.dart';
 
-enum ViewState {
+enum DataState {
   none,
   loading,
   error,
 }
 
-class ItemsProvider extends ChangeNotifier {
-  List<Items> _items = [];
-  ViewState _state = ViewState.none;
+class SellingProvider extends ChangeNotifier {
+  List<Sales> _items = [];
+  DataState _state = DataState.none;
   // final ItemsServices _service = ItemsServices();
-  final ItemsServices _service = ItemsServices();
+  final SellingServices _service = SellingServices();
 
-  List<Items> get items => _items;
-  ViewState get state => _state;
+  List<Sales> get items => _items;
+  DataState get state => _state;
   // ItemsProvider() {
   //   get();
   // }
-  changeState(ViewState newState) {
+  changeState(DataState newState) {
     _state = newState;
     notifyListeners();
   }
 
-  Future<String> add(Items data) async {
-    changeState(ViewState.loading);
+  Future<String> add(Sales data) async {
+    changeState(DataState.loading);
 
     try {
       final result = await _service.add(data);
 
       notifyListeners();
-      changeState(ViewState.none);
+      changeState(DataState.none);
       return result;
     } catch (e) {
-      changeState(ViewState.error);
+      changeState(DataState.error);
       return e.toString();
     }
   }
 
   void get() async {
-    changeState(ViewState.loading);
+    changeState(DataState.loading);
 
     try {
       final result = await _service.getdata();
       _items = result;
       notifyListeners();
-      changeState(ViewState.none);
+      changeState(DataState.none);
     } catch (e) {
-      changeState(ViewState.error);
+      changeState(DataState.error);
     }
   }
 
-  Future<String> edit(Items data) async {
-    changeState(ViewState.loading);
+  Future<String> edit(Sales data) async {
+    changeState(DataState.loading);
 
     try {
       final result = await _service.updateItem(data);
 
       notifyListeners();
-      changeState(ViewState.none);
+      changeState(DataState.none);
       return result;
     } catch (e) {
-      changeState(ViewState.error);
+      changeState(DataState.error);
       return e.toString();
     }
   }
 
   Future<String> delete(String id) async {
-    changeState(ViewState.loading);
+    changeState(DataState.loading);
 
     try {
       final result = await _service.delete(id);
 
       notifyListeners();
-      changeState(ViewState.none);
+      changeState(DataState.none);
       return result;
     } catch (e) {
-      changeState(ViewState.error);
+      changeState(DataState.error);
       return e.toString();
     }
   }

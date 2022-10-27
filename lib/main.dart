@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:provider/provider.dart';
 import 'package:warung_ku/provider/items_provider.dart';
+import 'package:warung_ku/provider/selling_provider.dart';
 import 'package:warung_ku/screen/entry_data.dart';
 import 'package:warung_ku/screen/home_screen.dart';
 import 'package:warung_ku/screen/login_screen.dart';
@@ -13,7 +14,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => ItemsProvider())],
+    providers: [
+      ChangeNotifierProvider(create: (_) => ItemsProvider()),
+      ChangeNotifierProvider(create: (_) => SellingProvider())
+    ],
     child: const MyApp(),
   ));
 }

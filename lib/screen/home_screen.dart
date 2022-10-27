@@ -5,6 +5,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:warung_ku/provider/items_provider.dart';
+import 'package:warung_ku/provider/selling_provider.dart';
 import 'package:warung_ku/screen/entry_data.dart';
 import 'package:warung_ku/screen/login_screen.dart';
 import 'package:warung_ku/widget/entry_sales.dart';
@@ -30,8 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   Future<void> initialState() async {
-    var data = Provider.of<ItemsProvider>(context, listen: false);
-    data.get();
+    var items = Provider.of<ItemsProvider>(context, listen: false);
+    var selling = Provider.of<SellingProvider>(context, listen: false);
+    items.get();
+    selling.get();
     if (mounted) {}
   }
 
