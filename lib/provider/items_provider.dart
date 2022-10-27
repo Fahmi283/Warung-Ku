@@ -11,14 +11,10 @@ enum ViewState {
 class ItemsProvider extends ChangeNotifier {
   List<Items> _items = [];
   ViewState _state = ViewState.none;
-  // final ItemsServices _service = ItemsServices();
   final ItemsServices _service = ItemsServices();
 
   List<Items> get items => _items;
   ViewState get state => _state;
-  // ItemsProvider() {
-  //   get();
-  // }
   changeState(ViewState newState) {
     _state = newState;
     notifyListeners();

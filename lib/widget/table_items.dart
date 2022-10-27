@@ -74,8 +74,8 @@ class TableData extends StatelessWidget {
       _getTitleItemWidget('No', 50),
       _getTitleItemWidget('Items Name', 300),
       _getTitleItemWidget('Harga Jual', 200),
-      _getTitleItemWidget('Jumlah', 200),
-      _getTitleItemWidget('Tanggal', 200),
+      _getTitleItemWidget('Jumlah', 100),
+      _getTitleItemWidget('Tanggal', 300),
     ];
   }
 
@@ -128,14 +128,14 @@ class TableData extends StatelessWidget {
                 Text('Rp. ${currency.format(data.items[index].sellingPrice)}'),
           ),
           Container(
-            width: 200,
+            width: 100,
             height: 52,
             padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
             alignment: Alignment.centerLeft,
             child: Text(data.items[index].sum.toString()),
           ),
           Container(
-            width: 100,
+            width: 300,
             height: 52,
             padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
             alignment: Alignment.centerLeft,

@@ -23,12 +23,6 @@ class ItemsServices {
         ));
       });
       return data;
-      //   for (var element in response.data) {
-      //     print(element['0']);
-
-      //   }
-      //   // return List<Items>.from(
-      //   //     response.data.map((data) => Model.fromJson(data)).toList());
     }
     return [];
   }

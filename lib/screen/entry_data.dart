@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +25,31 @@ class _EntryItemsState extends State<EntryItems> {
   void showNotification(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.blue, content: Text(message.toString())));
+  }
+
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes = '';
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      var barcode = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      if (barcode == '-1') {
+        barcodeScanRes = '';
+      } else {
+        barcodeScanRes = barcode;
+      }
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    // if (!mounted) return;
+
+    setState(() {
+      barcodeController.text = barcodeScanRes;
+    });
   }
 
   @override
@@ -83,6 +110,12 @@ class _EntryItemsState extends State<EntryItems> {
                   keyboardType: TextInputType.name,
                   controller: nameController,
                   cursorColor: Colors.blue,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Field tidak boleh kosong';
+                    }
+                    return '';
+                  },
                   decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
@@ -102,6 +135,12 @@ class _EntryItemsState extends State<EntryItems> {
                   keyboardType: TextInputType.number,
                   controller: priceController,
                   cursorColor: Colors.blue,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Field tidak boleh kosong';
+                    }
+                    return '';
+                  },
                   decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
@@ -117,10 +156,19 @@ class _EntryItemsState extends State<EntryItems> {
                 padding:
                     const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
                 child: TextFormField(
+                  onTap: () {
+                    scanBarcodeNormal();
+                  },
                   textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.name,
+                  keyboardType: TextInputType.none,
                   controller: barcodeController,
                   cursorColor: Colors.blue,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Field tidak boleh kosong';
+                    }
+                    return '';
+                  },
                   decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
@@ -140,6 +188,12 @@ class _EntryItemsState extends State<EntryItems> {
                   keyboardType: TextInputType.number,
                   controller: stockController,
                   cursorColor: Colors.blue,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Field tidak boleh kosong';
+                    }
+                    return '';
+                  },
                   decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
@@ -155,34 +209,36 @@ class _EntryItemsState extends State<EntryItems> {
               ),
               ElevatedButton(
                   onPressed: () async {
-                    SmartDialog.showLoading();
-                    final helper =
-                        Provider.of<ItemsProvider>(context, listen: false);
-                    if (args == null) {
-                      Items data = Items(
-                          name: nameController.text,
-                          price: int.parse(priceController.text),
-                          barcode: int.parse(barcodeController.text),
-                          stock: int.parse(stockController.text));
-                      var result = await helper.add(data);
-                      helper.get();
-                      if (mounted) {}
-                      showNotification(context, result);
-                      SmartDialog.dismiss();
-                      Navigator.pop(context);
-                    } else {
-                      Items data = Items(
-                          id: args.id,
-                          name: nameController.text,
-                          price: int.parse(priceController.text),
-                          barcode: int.parse(barcodeController.text),
-                          stock: int.parse(stockController.text));
-                      final result = await helper.edit(data);
-                      helper.get();
-                      if (mounted) {}
-                      showNotification(context, result);
-                      SmartDialog.dismiss();
-                      Navigator.pop(context);
+                    if (formKey.currentState!.validate()) {
+                      SmartDialog.showLoading();
+                      final helper =
+                          Provider.of<ItemsProvider>(context, listen: false);
+                      if (args == null) {
+                        Items data = Items(
+                            name: nameController.text,
+                            price: int.parse(priceController.text),
+                            barcode: int.parse(barcodeController.text),
+                            stock: int.parse(stockController.text));
+                        var result = await helper.add(data);
+                        helper.get();
+                        if (mounted) {}
+                        showNotification(context, result);
+                        SmartDialog.dismiss();
+                        Navigator.pop(context);
+                      } else {
+                        Items data = Items(
+                            id: args.id,
+                            name: nameController.text,
+                            price: int.parse(priceController.text),
+                            barcode: int.parse(barcodeController.text),
+                            stock: int.parse(stockController.text));
+                        final result = await helper.edit(data);
+                        helper.get();
+                        if (mounted) {}
+                        showNotification(context, result);
+                        SmartDialog.dismiss();
+                        Navigator.pop(context);
+                      }
                     }
                   },
                   child: Text((args == null) ? 'Add' : 'Edit'))

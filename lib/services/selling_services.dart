@@ -10,11 +10,11 @@ class SellingServices {
     _dio = Dio();
   }
   Future<List<Sales>> getdata() async {
-    List<Sales> data = [];
+    List<Sales> dataList = [];
     final Response response = await _dio.get(baseUrl);
     if (response.data != null) {
       response.data.forEach((id, data) {
-        data.add(Sales(
+        dataList.add(Sales(
           id: id,
           name: data['name'],
           sellingPrice: data['sellingPrice'],
@@ -23,13 +23,7 @@ class SellingServices {
           date: data['date'],
         ));
       });
-      return data;
-      //   for (var element in response.data) {
-      //     print(element['0']);
-
-      //   }
-      //   // return List<Items>.from(
-      //   //     response.data.map((data) => Model.fromJson(data)).toList());
+      return dataList;
     }
     return [];
   }
