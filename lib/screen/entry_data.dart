@@ -47,9 +47,7 @@ class _EntryItemsState extends State<EntryItems> {
     // setState to update our non-existent appearance.
     // if (!mounted) return;
 
-    setState(() {
-      barcodeController.text = barcodeScanRes;
-    });
+    barcodeController.text = barcodeScanRes;
   }
 
   @override
@@ -205,6 +203,7 @@ class _EntryItemsState extends State<EntryItems> {
               ),
               ElevatedButton(
                   onPressed: () async {
+                    FocusManager.instance.primaryFocus?.unfocus();
                     if (formKey.currentState!.validate()) {
                       SmartDialog.showLoading();
                       final helper =

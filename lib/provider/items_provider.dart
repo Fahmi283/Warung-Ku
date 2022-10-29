@@ -15,6 +15,11 @@ class ItemsProvider extends ChangeNotifier {
 
   List<Items> get items => _items;
   ViewState get state => _state;
+
+  ItemsProvider() {
+    get();
+  }
+
   changeState(ViewState newState) {
     _state = newState;
     notifyListeners();
@@ -53,6 +58,21 @@ class ItemsProvider extends ChangeNotifier {
 
     try {
       final result = await _service.updateItem(data);
+
+      notifyListeners();
+      changeState(ViewState.none);
+      return result;
+    } catch (e) {
+      changeState(ViewState.error);
+      return e.toString();
+    }
+  }
+
+  Future<String> updateStock(Items data, int sum) async {
+    changeState(ViewState.loading);
+
+    try {
+      final result = await _service.updateStock(data, sum);
 
       notifyListeners();
       changeState(ViewState.none);

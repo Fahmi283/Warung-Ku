@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -72,6 +73,7 @@ class _EntrySalesState extends State<EntrySales> {
 
   @override
   Widget build(BuildContext context) {
+    final item = Provider.of<ItemsProvider>(context, listen: false);
     return Consumer<SellingProvider>(
       builder: (context, manager, child) {
         if (manager.state == DataState.loading) {
@@ -126,7 +128,7 @@ class _EntrySalesState extends State<EntrySales> {
                         validator: (value) {
                           if (value == null) {
                             return 'Field tidak boleh kosong';
-                          } else if (manager.items.indexWhere((element) =>
+                          } else if (item.items.indexWhere((element) =>
                                   element.barcode == int.parse(value)) <
                               0) {
                             return 'Data Barcode Tidak Ditemukan';
@@ -197,15 +199,14 @@ class _EntrySalesState extends State<EntrySales> {
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
                           SmartDialog.showLoading();
-                          final sell = Provider.of<SellingProvider>(context,
-                              listen: false);
-                          final item = Provider.of<ItemsProvider>(context,
-                              listen: false);
+                          User user = FirebaseAuth.instance.currentUser!;
+
                           var indexItem = item.items.indexWhere((element) =>
                               element.barcode ==
                               int.parse(barcodeController.text));
                           Items dataItem = item.items[indexItem];
                           Sales data = Sales(
+                              uId: user.uid,
                               name: dataItem.name,
                               sellingPrice: int.parse(priceController.text),
                               barcode: int.parse(barcodeController.text),
@@ -213,8 +214,11 @@ class _EntrySalesState extends State<EntrySales> {
                               date: DateFormat('yyyy-MM-dd – kk:mm')
                                   .format(DateTime.now())
                                   .toString());
-                          var result = await sell.add(data);
-                          sell.get();
+                          var sum = dataItem.stock - data.sum;
+                          var result = await manager.add(data);
+                          manager.get();
+                          item.get();
+                          item.updateStock(dataItem, sum);
                           if (mounted) {}
                           showNotification(context, result);
                           barcodeController.clear();

@@ -64,6 +64,7 @@ class TableData extends StatelessWidget {
             ),
           );
         } else {
+          SmartDialog.dismiss();
           return Center(
             child: TextButton(
               onPressed: () {
@@ -115,7 +116,7 @@ class TableData extends StatelessWidget {
     return InkWell(
       onTap: () {},
       onLongPress: () async {
-        final result = await data.delete(data.items[index].id!);
+        final result = await data.delete(data.items[index]);
         data.get();
 
         // ignore: use_build_context_synchronously

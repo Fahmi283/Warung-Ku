@@ -16,9 +16,10 @@ class SellingProvider extends ChangeNotifier {
 
   List<Sales> get items => _items;
   DataState get state => _state;
-  // ItemsProvider() {
-  //   get();
-  // }
+  SellingProvider() {
+    get();
+  }
+
   changeState(DataState newState) {
     _state = newState;
     notifyListeners();
@@ -67,11 +68,11 @@ class SellingProvider extends ChangeNotifier {
     }
   }
 
-  Future<String> delete(String id) async {
+  Future<String> delete(Sales data) async {
     changeState(DataState.loading);
 
     try {
-      final result = await _service.delete(id);
+      final result = await _service.delete(data);
 
       notifyListeners();
       changeState(DataState.none);

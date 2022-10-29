@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:warung_ku/provider/items_provider.dart';
-import 'package:warung_ku/provider/selling_provider.dart';
 import 'package:warung_ku/provider/theme_provider.dart';
 import 'package:warung_ku/screen/entry_data.dart';
 import 'package:warung_ku/screen/login_screen.dart';
@@ -30,23 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
     TableData(),
     const Settings(),
   ];
-
-  Future<void> initialState() async {
-    var items = Provider.of<ItemsProvider>(context, listen: false);
-    var selling = Provider.of<SellingProvider>(context, listen: false);
-    items.get();
-    selling.get();
-    if (mounted) {}
-  }
-
-  @override
-  void didChangeDependencies() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      initialState();
-    });
-    super.didChangeDependencies();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(builder: (context, value, child) {

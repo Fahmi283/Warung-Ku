@@ -38,8 +38,8 @@ class _LoginScreenState extends State<LoginScreen> {
           style: GoogleFonts.lato(fontSize: 30, fontWeight: FontWeight.bold),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Center(
+      body: Center(
+        child: SingleChildScrollView(
           child: Form(
             key: formKey,
             child: Column(

@@ -1,4 +1,5 @@
 class Sales {
+  String? uId;
   String? id;
   String name;
   int sellingPrice;
@@ -7,6 +8,7 @@ class Sales {
   String date;
 
   Sales({
+    this.uId,
     this.id,
     required this.name,
     required this.sellingPrice,

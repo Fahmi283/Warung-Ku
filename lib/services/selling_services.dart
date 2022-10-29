@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:warung_ku/model/sales_model.dart';
 
 class SellingServices {
@@ -16,6 +17,7 @@ class SellingServices {
       response.data.forEach((id, data) {
         dataList.add(Sales(
           id: id,
+          uId: data['uId'],
           name: data['name'],
           sellingPrice: data['sellingPrice'],
           barcode: data['barcode'],
@@ -30,6 +32,7 @@ class SellingServices {
 
   Future<String> add(Sales data) async {
     Map<String, dynamic> map = {
+      "uId": data.uId,
       "name": data.name,
       "sellingPrice": data.sellingPrice,
       "barcode": data.barcode,
@@ -44,14 +47,20 @@ class SellingServices {
     }
   }
 
-  Future<String> delete(String id) async {
-    final response = await _dio.delete(
-        'https://warung-firebase-default-rtdb.asia-southeast1.firebasedatabase.app/sellingData/$id.json');
-    return response.data.toString();
+  Future<String> delete(Sales data) async {
+    User user = FirebaseAuth.instance.currentUser!;
+    if (user.uid == data.uId) {
+      final response = await _dio.delete(
+          'https://warung-firebase-default-rtdb.asia-southeast1.firebasedatabase.app/sellingData/${data.id}.json');
+      return response.data.toString();
+    } else {
+      return 'Akses di larang';
+    }
   }
 
   Future<String> updateItem(Sales data) async {
     Map<String, dynamic> map = {
+      "uId": data.uId,
       "name": data.name,
       "sellingPrice": data.sellingPrice,
       "barcode": data.barcode,

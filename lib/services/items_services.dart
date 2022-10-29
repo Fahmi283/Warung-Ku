@@ -65,4 +65,19 @@ class ItemsServices {
       return 'Gagal di update';
     }
   }
+
+  Future<String> updateStock(Items data, int sum) async {
+    Map<String, dynamic> map = {
+      "stock": sum,
+    };
+    final response = await _dio.patch(
+        'https://warung-firebase-default-rtdb.asia-southeast1.firebasedatabase.app/items/${data.id}.json',
+        data: map);
+
+    if (response.data != null) {
+      return 'Berhasil di update';
+    } else {
+      return 'Gagal di update';
+    }
+  }
 }
