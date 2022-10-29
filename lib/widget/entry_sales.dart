@@ -99,6 +99,7 @@ class _EntrySalesState extends State<EntrySales> {
             ),
           );
         } else {
+          SmartDialog.dismiss();
           return Form(
             key: formKey,
             child: Center(

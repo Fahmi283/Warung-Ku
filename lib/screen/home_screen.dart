@@ -1,4 +1,4 @@
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:bottom_bar/bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -21,13 +21,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _bottomNavIndex = 0;
-  final List<Widget> screens = [
-    const EntrySales(),
-    ListItems(),
-    TableData(),
-    const Settings(),
-  ];
+  int _currentPage = 0;
+  final _pageController = PageController();
+
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(builder: (context, value, child) {
@@ -43,12 +39,12 @@ class _HomeScreenState extends State<HomeScreen> {
           centerTitle: true,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: (_bottomNavIndex == 1)
+        floatingActionButton: (_currentPage == 1)
             ? FloatingActionButton(
                 backgroundColor: Colors.blue[200],
                 heroTag: 'edit-list',
                 onPressed: () async {
-                  if (_bottomNavIndex == 1) {
+                  if (_currentPage == 1) {
                     Navigator.pushNamed(context, EntryItems.routeName);
                   } else {
                     SmartDialog.showLoading();
@@ -62,26 +58,68 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: const Icon(Icons.add),
               )
             : null,
-        bottomNavigationBar: AnimatedBottomNavigationBar(
-          icons: const [
-            Icons.home,
-            Icons.storage,
-            Icons.history,
-            Icons.settings,
+        // bottomNavigationBar: AnimatedBottomNavigationBar(
+        //   icons: const [
+        //     Icons.home,
+        //     Icons.storage,
+        //     Icons.history,
+        //     Icons.settings,
+        //   ],
+        //   backgroundColor: Colors.blue[200],
+        //   inactiveColor: Colors.white,
+        //   activeColor: Colors.blue[900],
+        //   gapLocation: GapLocation.none,
+        //   activeIndex: _bottomNavIndex,
+        //   leftCornerRadius: 32,
+        //   rightCornerRadius: 32,
+        //   onTap: (index) => setState(() => _bottomNavIndex = index),
+        //   //other params
+        // ),
+        body: PageView(
+          controller: _pageController,
+          children: [
+            const EntrySales(),
+            ListItems(),
+            TableData(),
+            const Settings(),
           ],
-          backgroundColor: Colors.blue[200],
-          inactiveColor: Colors.white,
-          activeColor: Colors.blue[900],
-          gapLocation: GapLocation.none,
-          activeIndex: _bottomNavIndex,
-          leftCornerRadius: 32,
-          rightCornerRadius: 32,
-          onTap: (index) => setState(() => _bottomNavIndex = index),
-          //other params
+          onPageChanged: (index) {
+            setState(() => _currentPage = index);
+          },
         ),
-        body: IndexedStack(
-          index: _bottomNavIndex,
-          children: screens,
+        bottomNavigationBar: BottomBar(
+          textStyle: const TextStyle(fontWeight: FontWeight.bold),
+          selectedIndex: _currentPage,
+          onTap: (int index) {
+            _pageController.jumpToPage(index);
+            setState(() => _currentPage = index);
+          },
+          items: <BottomBarItem>[
+            BottomBarItem(
+              icon: const Icon(Icons.home),
+              title: const Text('Home'),
+              activeColor: Colors.blue.shade200,
+              activeTitleColor: Colors.blue.shade400,
+            ),
+            BottomBarItem(
+              icon: const Icon(Icons.storage_rounded),
+              title: const Text('Inventory'),
+              activeColor: Colors.blue.shade200,
+              activeTitleColor: Colors.blue.shade400,
+            ),
+            BottomBarItem(
+              icon: const Icon(Icons.work_history),
+              title: const Text('History'),
+              activeColor: Colors.blue.shade200,
+              activeTitleColor: Colors.blue.shade400,
+            ),
+            BottomBarItem(
+              icon: const Icon(Icons.settings),
+              title: const Text('Settings'),
+              activeColor: Colors.blue.shade200,
+              activeTitleColor: Colors.blue.shade400,
+            ),
+          ],
         ),
       );
     });

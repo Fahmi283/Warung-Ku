@@ -43,13 +43,13 @@ dependencies:
   firebase_auth: ^4.0.1
   google_fonts: ^3.0.1
   toggle_switch: ^2.0.1
-  animated_bottom_navigation_bar: ^1.1.0
   cloud_firestore: ^4.0.2
   intl: ^0.17.0
   flutter_smart_dialog: ^4.6.1+5
   horizontal_data_table: ^4.1.2+2
   dio: ^4.0.6
   flutter_barcode_scanner: ^2.0.0
+  bottom_bar: ^2.0.2
 
 dev_dependencies:
   flutter_test:
