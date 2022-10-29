@@ -27,7 +27,8 @@ class _EntrySalesState extends State<EntrySales> {
 
   void showNotification(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.blue, content: Text(message.toString())));
+        backgroundColor: Colors.blue.shade200,
+        content: Text(message.toString())));
   }
 
   @override
@@ -98,20 +99,25 @@ class _EntrySalesState extends State<EntrySales> {
             ),
           );
         } else {
-          return SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Center(
+          return Form(
+            key: formKey,
+            child: Center(
+              child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
                       margin: const EdgeInsets.all(16),
                       child: Text(
-                        'Masukan Data Barang',
+                        'Masukan Data Penjualan',
                         style: GoogleFonts.lato(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue.shade200),
                       ),
+                    ),
+                    const SizedBox(
+                      height: 20,
                     ),
                     Container(
                       margin: const EdgeInsets.fromLTRB(30, 0, 30, 15),
@@ -124,12 +130,12 @@ class _EntrySalesState extends State<EntrySales> {
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.number,
                         controller: barcodeController,
-                        cursorColor: Colors.blue,
+                        cursorColor: Colors.blue.shade200,
                         validator: (value) {
-                          if (value == null) {
+                          if (value == null || value.isEmpty) {
                             return 'Field tidak boleh kosong';
                           } else if (item.items.indexWhere((element) =>
-                                  element.barcode == int.parse(value)) <
+                                  element.barcode == int.tryParse(value)) <
                               0) {
                             return 'Data Barcode Tidak Ditemukan';
                           }
@@ -139,7 +145,8 @@ class _EntrySalesState extends State<EntrySales> {
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(color: Colors.blue),
+                              borderSide:
+                                  BorderSide(color: Colors.blue.shade200),
                             ),
                             hintText: 'Barcode'),
                       ),
@@ -152,7 +159,7 @@ class _EntrySalesState extends State<EntrySales> {
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.number,
                         controller: priceController,
-                        cursorColor: Colors.blue,
+                        cursorColor: Colors.blue.shade200,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Field tidak boleh kosong';
@@ -163,7 +170,8 @@ class _EntrySalesState extends State<EntrySales> {
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(color: Colors.blue),
+                              borderSide:
+                                  BorderSide(color: Colors.blue.shade200),
                             ),
                             hintText: 'Selling Price'),
                       ),
@@ -176,7 +184,7 @@ class _EntrySalesState extends State<EntrySales> {
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.number,
                         controller: sumController,
-                        cursorColor: Colors.blue,
+                        cursorColor: Colors.blue.shade200,
                         validator: (value) {
                           if (value == null || value.isEmpty) {
                             return 'Field tidak boleh kosong';
@@ -187,7 +195,8 @@ class _EntrySalesState extends State<EntrySales> {
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(color: Colors.blue),
+                              borderSide:
+                                  BorderSide(color: Colors.blue.shade200),
                             ),
                             hintText: 'jumlah'),
                       ),
@@ -195,39 +204,45 @@ class _EntrySalesState extends State<EntrySales> {
                     const SizedBox(
                       height: 30,
                     ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        if (formKey.currentState!.validate()) {
-                          SmartDialog.showLoading();
-                          User user = FirebaseAuth.instance.currentUser!;
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 50),
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          FocusManager.instance.primaryFocus?.unfocus();
+                          if (formKey.currentState!.validate()) {
+                            SmartDialog.showLoading();
+                            User user = FirebaseAuth.instance.currentUser!;
 
-                          var indexItem = item.items.indexWhere((element) =>
-                              element.barcode ==
-                              int.parse(barcodeController.text));
-                          Items dataItem = item.items[indexItem];
-                          Sales data = Sales(
-                              uId: user.uid,
-                              name: dataItem.name,
-                              sellingPrice: int.parse(priceController.text),
-                              barcode: int.parse(barcodeController.text),
-                              sum: int.parse(sumController.text),
-                              date: DateFormat('yyyy-MM-dd – kk:mm')
-                                  .format(DateTime.now())
-                                  .toString());
-                          var sum = dataItem.stock - data.sum;
-                          var result = await manager.add(data);
-                          manager.get();
-                          item.get();
-                          item.updateStock(dataItem, sum);
-                          if (mounted) {}
-                          showNotification(context, result);
-                          barcodeController.clear();
-                          sumController.clear();
-                          priceController.clear();
-                          SmartDialog.dismiss();
-                        }
-                      },
-                      child: const Text('Add'),
+                            var indexItem = item.items.indexWhere((element) =>
+                                element.barcode ==
+                                int.parse(barcodeController.text));
+                            Items dataItem = item.items[indexItem];
+                            Sales data = Sales(
+                                uId: user.uid,
+                                name: dataItem.name,
+                                sellingPrice: int.parse(priceController.text),
+                                barcode: int.parse(barcodeController.text),
+                                sum: int.parse(sumController.text),
+                                date: DateFormat('yyyy-MM-dd – kk:mm')
+                                    .format(DateTime.now())
+                                    .toString());
+                            var sum = dataItem.stock - data.sum;
+                            var result = await manager.add(data);
+                            manager.get();
+                            item.get();
+                            item.updateStock(dataItem, sum);
+                            if (mounted) {}
+                            showNotification(context, result);
+                            barcodeController.clear();
+                            sumController.clear();
+                            priceController.clear();
+                            SmartDialog.dismiss();
+                          }
+                        },
+                        child: const Text('Add Data'),
+                      ),
                     )
                   ],
                 ),

@@ -3,6 +3,7 @@ import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:horizontal_data_table/horizontal_data_table.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:warung_ku/model/sales_model.dart';
 import 'package:warung_ku/provider/selling_provider.dart';
 import 'package:warung_ku/provider/theme_provider.dart';
 
@@ -92,7 +93,7 @@ class TableData extends StatelessWidget {
     return Container(
       color: (context.watch<ThemeProvider>().isdark)
           ? Colors.blue[200]
-          : Colors.grey[700],
+          : Colors.blue[200],
       width: width,
       height: 56,
       padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -112,49 +113,49 @@ class TableData extends StatelessWidget {
   }
 
   Widget _generateRightHandSideColumnRow(BuildContext context, int index) {
-    var data = Provider.of<SellingProvider>(context);
-    return InkWell(
-      onTap: () {},
-      onLongPress: () async {
-        final result = await data.delete(data.items[index]);
-        data.get();
-
-        // ignore: use_build_context_synchronously
-        showNotification(context, result);
+    return Consumer<SellingProvider>(
+      builder: (context, value, child) {
+        Sales dataItem = value.items[index];
+        return InkWell(
+          onTap: () {},
+          onLongPress: () {
+            value.delete(dataItem);
+            value.get();
+          },
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: 300,
+                height: 52,
+                padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                alignment: Alignment.centerLeft,
+                child: Text(dataItem.name),
+              ),
+              Container(
+                width: 200,
+                height: 52,
+                padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                alignment: Alignment.centerLeft,
+                child: Text('Rp. ${currency.format(dataItem.sellingPrice)}'),
+              ),
+              Container(
+                width: 100,
+                height: 52,
+                padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                alignment: Alignment.centerLeft,
+                child: Text(dataItem.sum.toString()),
+              ),
+              Container(
+                width: 300,
+                height: 52,
+                padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                alignment: Alignment.centerLeft,
+                child: Text(dataItem.date),
+              ),
+            ],
+          ),
+        );
       },
-      child: Row(
-        children: <Widget>[
-          Container(
-            width: 300,
-            height: 52,
-            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-            alignment: Alignment.centerLeft,
-            child: Text(data.items[index].name),
-          ),
-          Container(
-            width: 200,
-            height: 52,
-            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-            alignment: Alignment.centerLeft,
-            child:
-                Text('Rp. ${currency.format(data.items[index].sellingPrice)}'),
-          ),
-          Container(
-            width: 100,
-            height: 52,
-            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-            alignment: Alignment.centerLeft,
-            child: Text(data.items[index].sum.toString()),
-          ),
-          Container(
-            width: 300,
-            height: 52,
-            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-            alignment: Alignment.centerLeft,
-            child: Text(data.items[index].date),
-          ),
-        ],
-      ),
     );
   }
 }

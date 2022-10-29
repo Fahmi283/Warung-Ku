@@ -35,10 +35,16 @@ class MyApp extends StatelessWidget {
           builder: FlutterSmartDialog.init(),
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            primaryColorDark: Colors.blue,
+            elevatedButtonTheme: ElevatedButtonThemeData(
+                style: ButtonStyle(
+              foregroundColor: MaterialStateProperty.all(Colors.blue.shade900),
+              backgroundColor: MaterialStateProperty.all(Colors.blue.shade100),
+            )),
+            backgroundColor: Colors.blue[100],
+            splashColor: Colors.blue[200],
             brightness: value.isdark ? Brightness.light : Brightness.dark,
             useMaterial3: true,
-            primarySwatch: Colors.blue,
+            // primarySwatch: Colors.lightBlue,
           ),
           routes: {
             EntryItems.routeName: (context) => const EntryItems(),

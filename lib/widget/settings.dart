@@ -15,41 +15,39 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
-  var active = 0;
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
       child: ListView(
         children: [
-          Card(
-            child: ListTile(
-              title: const Text('Dark Mode'),
-              trailing: ToggleSwitch(
-                minWidth: 60.0,
-                minHeight: 30,
-                initialLabelIndex: active,
-                cornerRadius: 20.0,
-                activeFgColor: Colors.white,
-                inactiveBgColor: Colors.grey,
-                inactiveFgColor: Colors.white,
-                totalSwitches: 2,
-                labels: const ['OFF', 'ON'],
-                activeBgColors: const [
-                  [Colors.blue],
-                  [Colors.blueAccent]
-                ],
-                onToggle: (index) {
-                  setState(() {
-                    active = index!;
-                    final data =
-                        Provider.of<ThemeProvider>(context, listen: false);
-                    data.changeTheme();
-                  });
-                },
-              ),
-            ),
-          ),
+          Card(child: Consumer<ThemeProvider>(
+            builder: (context, value, child) {
+              return ListTile(
+                title: const Text('Dark Mode'),
+                trailing: ToggleSwitch(
+                  minWidth: 60.0,
+                  minHeight: 30,
+                  initialLabelIndex: (value.isdark) ? 0 : 1,
+                  cornerRadius: 20.0,
+                  activeFgColor: Colors.white,
+                  inactiveBgColor: Colors.grey,
+                  inactiveFgColor: Colors.white,
+                  totalSwitches: 2,
+                  labels: const ['OFF', 'ON'],
+                  activeBgColors: [
+                    [Colors.blue.shade200],
+                    [Colors.blue.shade200]
+                  ],
+                  onToggle: (index) {
+                    setState(() {
+                      value.changeTheme();
+                    });
+                  },
+                ),
+              );
+            },
+          )),
           Card(
             child: ListTile(
               onTap: () async {

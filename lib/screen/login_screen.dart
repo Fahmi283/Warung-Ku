@@ -34,8 +34,11 @@ class _LoginScreenState extends State<LoginScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: Text(
-          'WarungKu',
-          style: GoogleFonts.lato(fontSize: 30, fontWeight: FontWeight.bold),
+          'SMART STORE',
+          style: GoogleFonts.lato(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue.shade200),
         ),
       ),
       body: Center(
@@ -54,9 +57,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   inactiveFgColor: Colors.white,
                   totalSwitches: 2,
                   labels: const ['SignUp', 'SignIn'],
-                  activeBgColors: const [
-                    [Colors.blue],
-                    [Colors.blueAccent]
+                  activeBgColors: [
+                    [Colors.blue.shade200],
+                    [Colors.blue.shade200]
                   ],
                   onToggle: (index) {
                     setState(() {
@@ -71,11 +74,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 40,
                 ),
                 Text(
-                  'SIGN IN WITH EMAIL/PASSWORD',
+                  (activeTab == 0)
+                      ? 'SIGN UP WITH EMAIL/PASSWORD'
+                      : 'SIGN IN WITH EMAIL/PASSWORD',
                   style: GoogleFonts.lato(
-                      fontSize: 18, fontWeight: FontWeight.bold),
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue.shade200),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
                 //* EMAIL TEXTFIELD
                 (activeTab == 0)
                     ? Container(
@@ -86,13 +93,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.name,
                           controller: nameController,
-                          cursorColor: Colors.blue,
+                          cursorColor: Colors.blue.shade200,
                           decoration: InputDecoration(
                               filled: true,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                                 borderSide:
-                                    const BorderSide(color: Colors.blue),
+                                    BorderSide(color: Colors.blue.shade200),
                               ),
                               hintText: 'Name'),
                         ),
@@ -110,12 +117,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     textInputAction: TextInputAction.next,
                     keyboardType: TextInputType.emailAddress,
                     controller: emailController,
-                    cursorColor: Colors.blue,
+                    cursorColor: Colors.blue.shade200,
                     decoration: InputDecoration(
                         filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Colors.blue.shade200),
                         ),
                         hintText: 'Email'),
                   ),
@@ -131,15 +138,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     textInputAction: TextInputAction.done,
                     keyboardType: TextInputType.visiblePassword,
                     controller: passwordController,
-                    cursorColor: Colors.blue,
+                    cursorColor: Colors.blue.shade200,
                     decoration: InputDecoration(
                         filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(color: Colors.blue),
+                          borderSide: BorderSide(color: Colors.blue.shade200),
                         ),
                         hintText: 'Password'),
                   ),
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 (activeTab == 0)
                     ? SizedBox(
@@ -212,9 +222,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       showNotification(context, e.message.toString());
                     }
                   },
-                  child: const Text(
+                  child: Text(
                     'Forgot password?',
-                    style: TextStyle(color: Colors.blue),
+                    style: TextStyle(color: Colors.blue.shade200),
                   ),
                 ),
               ],
@@ -227,6 +237,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void showNotification(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        backgroundColor: Colors.blue, content: Text(message.toString())));
+        backgroundColor: Colors.blue.shade200,
+        content: Text(message.toString())));
   }
 }

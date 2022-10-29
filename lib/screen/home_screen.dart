@@ -34,35 +34,34 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         appBar: AppBar(
           title: Text(
-            'Smart Store',
-            style: GoogleFonts.lato(fontSize: 30, fontWeight: FontWeight.bold),
+            'SMART STORE',
+            style: GoogleFonts.lato(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue[200]),
           ),
           centerTitle: true,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: (_bottomNavIndex == 1)
-                  ? IconButton(
-                      onPressed: () async {
-                        if (_bottomNavIndex == 1) {
-                          Navigator.pushNamed(context, EntryItems.routeName);
-                        } else {
-                          SmartDialog.showLoading();
-                          await FirebaseAuth.instance.signOut();
-                          SmartDialog.dismiss();
-                          if (mounted) {}
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, LoginScreen.routeName, (route) => false);
-                        }
-                      },
-                      icon: Icon((_bottomNavIndex == 1)
-                          ? Icons.add
-                          : Icons.logout_outlined),
-                    )
-                  : Container(),
-            ),
-          ],
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: (_bottomNavIndex == 1)
+            ? FloatingActionButton(
+                backgroundColor: Colors.blue[200],
+                heroTag: 'edit-list',
+                onPressed: () async {
+                  if (_bottomNavIndex == 1) {
+                    Navigator.pushNamed(context, EntryItems.routeName);
+                  } else {
+                    SmartDialog.showLoading();
+                    await FirebaseAuth.instance.signOut();
+                    SmartDialog.dismiss();
+                    if (mounted) {}
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, LoginScreen.routeName, (route) => false);
+                  }
+                },
+                child: const Icon(Icons.add),
+              )
+            : null,
         bottomNavigationBar: AnimatedBottomNavigationBar(
           icons: const [
             Icons.home,
@@ -70,8 +69,9 @@ class _HomeScreenState extends State<HomeScreen> {
             Icons.history,
             Icons.settings,
           ],
-          backgroundColor: value.isdark ? Colors.white : Colors.grey[700],
-          activeColor: Colors.blue,
+          backgroundColor: Colors.blue[200],
+          inactiveColor: Colors.white,
+          activeColor: Colors.blue[900],
           gapLocation: GapLocation.none,
           activeIndex: _bottomNavIndex,
           leftCornerRadius: 32,
