@@ -50,31 +50,32 @@ class SellingServices {
   Future<String> delete(Sales data) async {
     User user = FirebaseAuth.instance.currentUser!;
     if (user.uid == data.uId) {
+      // ignore: unused_local_variable
       final response = await _dio.delete(
           'https://warung-firebase-default-rtdb.asia-southeast1.firebasedatabase.app/sellingData/${data.id}.json');
-      return response.data.toString();
+      return 'Data Dihapus';
     } else {
-      return 'Akses di larang';
+      return 'Tidak memiliki akses';
     }
   }
 
   Future<String> updateItem(Sales data) async {
     Map<String, dynamic> map = {
-      "uId": data.uId,
-      "name": data.name,
       "sellingPrice": data.sellingPrice,
-      "barcode": data.barcode,
-      "stock": data.sum,
-      "date": data.date,
+      "sum": data.sum,
     };
-    final response = await _dio.put(
-        'https://warung-firebase-default-rtdb.asia-southeast1.firebasedatabase.app/sellingData/${data.id}.json',
-        data: map);
-
-    if (response.data != null) {
-      return 'Berhasil di update';
+    User user = FirebaseAuth.instance.currentUser!;
+    if (user.uid == data.uId) {
+      final response = await _dio.patch(
+          'https://warung-firebase-default-rtdb.asia-southeast1.firebasedatabase.app/sellingData/${data.id}.json',
+          data: map);
+      if (response.data != null) {
+        return 'Berhasil di update';
+      } else {
+        return 'Gagal di update';
+      }
     } else {
-      return 'Gagal di update';
+      return 'Tidak memiliki akses';
     }
   }
 }

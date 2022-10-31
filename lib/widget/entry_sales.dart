@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -24,6 +25,9 @@ class _EntrySalesState extends State<EntrySales> {
   late TextEditingController barcodeController;
   late TextEditingController priceController;
   late TextEditingController sumController;
+  late TextEditingController textEditingController;
+
+  String? selectedValue;
 
   void showNotification(BuildContext context, String message) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -34,6 +38,7 @@ class _EntrySalesState extends State<EntrySales> {
   @override
   void initState() {
     barcodeController = TextEditingController();
+    textEditingController = TextEditingController();
     priceController = TextEditingController();
     sumController = TextEditingController();
     super.initState();
@@ -45,31 +50,6 @@ class _EntrySalesState extends State<EntrySales> {
     priceController.dispose();
     sumController.dispose();
     super.dispose();
-  }
-
-  Future<void> scanBarcodeNormal() async {
-    String barcodeScanRes = '';
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      var barcode = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-      if (barcode == '-1') {
-        barcodeScanRes = '';
-      } else {
-        barcodeScanRes = barcode;
-      }
-    } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      barcodeController.text = barcodeScanRes;
-    });
   }
 
   @override
@@ -121,12 +101,114 @@ class _EntrySalesState extends State<EntrySales> {
                       height: 20,
                     ),
                     Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 45),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          hint: Text(
+                            'Select Item',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).hintColor,
+                            ),
+                          ),
+                          items: List.generate(
+                            item.items.length,
+                            (index) => DropdownMenuItem(
+                              value: item.items[index].barcode.toString(),
+                              child: Text(
+                                item.items[index].name,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+                          value: selectedValue,
+                          onChanged: (value) {
+                            setState(() {
+                              barcodeController.text = value as String;
+                              selectedValue = value;
+                            });
+                          },
+                          buttonHeight: 40,
+                          buttonWidth: 400,
+                          itemHeight: 40,
+                          dropdownMaxHeight: 300,
+                          searchController: textEditingController,
+                          searchInnerWidget: Padding(
+                            padding: const EdgeInsets.only(
+                              top: 8,
+                              bottom: 4,
+                              right: 8,
+                              left: 8,
+                            ),
+                            child: TextFormField(
+                              controller: textEditingController,
+                              textCapitalization: TextCapitalization.sentences,
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 8,
+                                ),
+                                hintText: 'Search for an item...',
+                                hintStyle: const TextStyle(fontSize: 12),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ),
+                          searchMatchFn: (item, searchValue) {
+                            return (item.child
+                                .toString()
+                                .toLowerCase()
+                                .contains(searchValue.toLowerCase()));
+                          },
+                          //This to clear the search value when you close the menu
+                          onMenuStateChange: (isOpen) {
+                            if (!isOpen) {
+                              textEditingController.clear();
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                    Container(
                       margin: const EdgeInsets.fromLTRB(30, 0, 30, 15),
                       padding: const EdgeInsets.symmetric(
                           vertical: 0, horizontal: 15),
                       child: TextFormField(
-                        onTap: () {
-                          scanBarcodeNormal();
+                        onTap: () async {
+                          String barcodeScanRes = '';
+                          try {
+                            var barcode =
+                                await FlutterBarcodeScanner.scanBarcode(
+                                    '#ff6666',
+                                    'Cancel',
+                                    true,
+                                    ScanMode.BARCODE);
+                            if (barcode == '-1') {
+                              barcodeScanRes = '';
+                            } else {
+                              barcodeScanRes = barcode;
+                            }
+                          } on PlatformException {
+                            barcodeScanRes = 'Failed to get platform version.';
+                          }
+                          if (!mounted) return;
+
+                          setState(() {
+                            barcodeController.text = barcodeScanRes;
+                          });
+                          var result = item.items.indexWhere((element) =>
+                              element.barcode.toString() == barcodeScanRes);
+                          if (result != -1) {
+                            setState(() {
+                              selectedValue = barcodeScanRes;
+                            });
+                          } else {
+                            showNotification(context, 'Barcode Invalid');
+                          }
                         },
                         textInputAction: TextInputAction.next,
                         keyboardType: TextInputType.number,
@@ -232,8 +314,9 @@ class _EntrySalesState extends State<EntrySales> {
                             var sum = dataItem.stock - data.sum;
                             var result = await manager.add(data);
                             manager.get();
+                            await item.updateStock(dataItem, sum);
+
                             item.get();
-                            item.updateStock(dataItem, sum);
                             if (mounted) {}
                             showNotification(context, result);
                             barcodeController.clear();

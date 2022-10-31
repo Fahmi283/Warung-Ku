@@ -8,9 +8,9 @@ import 'package:warung_ku/provider/theme_provider.dart';
 import 'package:warung_ku/screen/entry_data.dart';
 import 'package:warung_ku/screen/login_screen.dart';
 import 'package:warung_ku/widget/entry_sales.dart';
-import 'package:warung_ku/widget/list_item.dart';
 import 'package:warung_ku/widget/settings.dart';
-import 'package:warung_ku/widget/table_items.dart';
+import 'package:warung_ku/widget/table_item.dart';
+import 'package:warung_ku/widget/table_sale.dart';
 
 class HomeScreen extends StatefulWidget {
   static const routeName = '/home';
@@ -77,11 +77,11 @@ class _HomeScreenState extends State<HomeScreen> {
         // ),
         body: PageView(
           controller: _pageController,
-          children: [
-            const EntrySales(),
-            ListItems(),
-            TableData(),
-            const Settings(),
+          children: const [
+            EntrySales(),
+            TableInventory(),
+            TableSaleData(),
+            Settings(),
           ],
           onPageChanged: (index) {
             setState(() => _currentPage = index);

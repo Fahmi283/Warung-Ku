@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:warung_ku/provider/items_provider.dart';
 import 'package:warung_ku/provider/selling_provider.dart';
 import 'package:warung_ku/provider/theme_provider.dart';
+import 'package:warung_ku/screen/edit_sale.dart';
 import 'package:warung_ku/screen/entry_data.dart';
 import 'package:warung_ku/screen/home_screen.dart';
 import 'package:warung_ku/screen/login_screen.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
             EntryItems.routeName: (context) => const EntryItems(),
             LoginScreen.routeName: (context) => const LoginScreen(),
             HomeScreen.routeName: (context) => const HomeScreen(),
+            EditSale.routeName: (context) => const EditSale(),
             Wrapper.routeName: (context) => const Wrapper(),
           },
           initialRoute: Wrapper.routeName,
